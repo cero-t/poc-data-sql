@@ -6,7 +6,11 @@ import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
+import org.springframework.data.repository.query.QueryLookupStrategy;
+import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.Optional;
 
 public class SqlRepositoryFactory extends RepositoryFactorySupport {
     private final RelationalMappingContext mappingContext;
@@ -28,6 +32,11 @@ public class SqlRepositoryFactory extends RepositoryFactorySupport {
         RelationalPersistentEntity<?> persistentEntity = mappingContext
                 .getRequiredPersistentEntity(metadata.getDomainType());
         return getTargetRepositoryViaReflection(metadata, persistentEntity, mappingContext, jdbcTemplate);
+    }
+
+    @Override
+    protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key, QueryMethodEvaluationContextProvider evaluationContextProvider) {
+        return Optional.of(new SqlQueryLookupStrategy(jdbcTemplate));
     }
 
     @Override

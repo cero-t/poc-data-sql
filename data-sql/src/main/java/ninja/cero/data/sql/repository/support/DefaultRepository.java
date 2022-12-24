@@ -1,6 +1,7 @@
 package ninja.cero.data.sql.repository.support;
 
 import ninja.cero.data.sql.core.convert.RecordMapper;
+import ninja.cero.data.sql.repository.SqlRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,10 +15,7 @@ import org.springframework.data.relational.core.mapping.RelationalPersistentEnti
 import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.data.relational.core.sql.*;
 import org.springframework.data.relational.core.sql.render.SqlRenderer;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.FluentQuery;
-import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class DefaultRepository<T, ID> implements CrudRepository<T, ID>, PagingAndSortingRepository<T, ID>, QueryByExampleExecutor<T> {
+public class DefaultRepository<T, ID> implements SqlRepository<T, ID> {
     private final RelationalPersistentEntity<T> entity;
 
     private final RelationalMappingContext mappingContext;
@@ -34,11 +32,14 @@ public class DefaultRepository<T, ID> implements CrudRepository<T, ID>, PagingAn
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final RecordMapper<T> recordMapper;
+
     public DefaultRepository(RelationalPersistentEntity<T> entity, RelationalMappingContext mappingContext, JdbcTemplate jdbcTemplate) {
         this.entity = entity;
         this.mappingContext = mappingContext;
         this.sqlRenderer = SqlRenderer.create(new RenderContextFactory(H2Dialect.INSTANCE).createRenderContext());
         this.jdbcTemplate = jdbcTemplate;
+        recordMapper = new RecordMapper<>(entity.getType());
     }
 
     @Override
@@ -76,7 +77,7 @@ public class DefaultRepository<T, ID> implements CrudRepository<T, ID>, PagingAn
         Select select = StatementBuilder.select(columnExpressions).from(table).build();
         String sql = sqlRenderer.render(select);
 
-        return jdbcTemplate.query(sql, new RecordMapper<>(entity.getType()));
+        return jdbcTemplate.query(sql, recordMapper);
     }
 
     @Override
@@ -157,5 +158,10 @@ public class DefaultRepository<T, ID> implements CrudRepository<T, ID>, PagingAn
     @Override
     public <S extends T, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
+    }
+
+    @Override
+    public List<T> query(String query, Object... args) {
+        return jdbcTemplate.query(query, recordMapper, args);
     }
 }

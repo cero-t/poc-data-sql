@@ -1,0 +1,1 @@
+select * from emp where id in (1, 3, 5)
