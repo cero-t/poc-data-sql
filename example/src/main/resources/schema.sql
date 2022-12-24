@@ -11,6 +11,6 @@ CREATE TABLE item
 
 CREATE TABLE emp
 (
-  id BIGINT NOT NULL PRIMARY KEY,
+  id BIGINT auto_increment NOT NULL PRIMARY KEY,
   name VARCHAR(64)
 );

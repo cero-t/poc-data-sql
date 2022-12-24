@@ -1,10 +1,9 @@
 package ninja.cero.data.sql.example.app;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class EmpController {
@@ -15,8 +14,19 @@ public class EmpController {
     }
 
     @GetMapping("/")
-    List<Emp> emp() {
+    Iterable<Emp> findAll() {
         return empRepository.findAll();
+    }
+
+    @PostMapping("/")
+    void save(@RequestBody Emp emp) {
+        System.out.println(emp);
+        empRepository.save(emp);
+    }
+
+    @GetMapping("/{id}")
+    Optional<Emp> findById(@PathVariable Long id) {
+        return empRepository.findById(id);
     }
 
     @GetMapping("/odd")

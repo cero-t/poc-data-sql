@@ -19,7 +19,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>ninja.cero.data.sql</groupId>
-			<artifactId>data-sql</artifactId>
+			<artifactId>data-jdbc-ext</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 

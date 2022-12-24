@@ -12,6 +12,7 @@
 
 	<modules>
 		<module>data-sql</module>
+		<module>data-jdbc-ext</module>
 		<module>example</module>
 	</modules>
 </project>

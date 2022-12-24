@@ -1,4 +1,6 @@
 package ninja.cero.data.sql.example.app;
 
-public record Emp (Long id, String name) {
+import org.springframework.data.annotation.Id;
+
+public record Emp (@Id Long id, String name) {
 }
