@@ -31,8 +31,6 @@ public class JdbcExtRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ext
     private EntityCallbacks entityCallbacks;
     private Dialect dialect;
 
-    private JdbcTemplate jdbcTemplate;
-
     public JdbcExtRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
         super(repositoryInterface);
     }
@@ -45,7 +43,7 @@ public class JdbcExtRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ext
 
     @Override
     protected RepositoryFactorySupport doCreateRepositoryFactory() {
-        JdbcRepositoryFactory jdbcRepositoryFactory = new JdbcExtRepositoryFactory(jdbcTemplate, dataAccessStrategy,
+        JdbcRepositoryFactory jdbcRepositoryFactory = new JdbcExtRepositoryFactory(dataAccessStrategy,
                 mappingContext, converter, dialect, publisher, operations);
         jdbcRepositoryFactory.setQueryMappingConfiguration(queryMappingConfiguration);
         jdbcRepositoryFactory.setEntityCallbacks(entityCallbacks);
@@ -87,11 +85,6 @@ public class JdbcExtRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ext
     public void setConverter(JdbcConverter converter) {
         Assert.notNull(converter, "JdbcConverter must not be null");
         this.converter = converter;
-    }
-
-    @Autowired
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override

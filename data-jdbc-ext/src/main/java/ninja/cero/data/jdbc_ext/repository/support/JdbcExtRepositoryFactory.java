@@ -22,22 +22,22 @@ import org.springframework.lang.Nullable;
 import java.util.Optional;
 
 public class JdbcExtRepositoryFactory extends JdbcRepositoryFactory {
-    private final JdbcTemplate jdbcTemplate;
     private final RelationalMappingContext context;
     private final JdbcConverter converter;
     private final ApplicationEventPublisher publisher;
     private final DataAccessStrategy accessStrategy;
 
+    private final NamedParameterJdbcOperations operations;
     private EntityCallbacks entityCallbacks;
 
-    public JdbcExtRepositoryFactory(JdbcTemplate jdbcTemplate, DataAccessStrategy dataAccessStrategy, RelationalMappingContext context, JdbcConverter converter, Dialect dialect, ApplicationEventPublisher publisher, NamedParameterJdbcOperations operations) {
+    public JdbcExtRepositoryFactory(DataAccessStrategy dataAccessStrategy, RelationalMappingContext context, JdbcConverter converter, Dialect dialect, ApplicationEventPublisher publisher, NamedParameterJdbcOperations operations) {
         super(dataAccessStrategy, context, converter, dialect, publisher, operations);
 
-        this.jdbcTemplate = jdbcTemplate;
         this.publisher = publisher;
         this.context = context;
         this.converter = converter;
         this.accessStrategy = dataAccessStrategy;
+        this.operations = operations;
     }
 
     @Override
@@ -51,7 +51,8 @@ public class JdbcExtRepositoryFactory extends JdbcRepositoryFactory {
         RelationalPersistentEntity<?> persistentEntity = context
                 .getRequiredPersistentEntity(repositoryInformation.getDomainType());
 
-        return getTargetRepositoryViaReflection(repositoryInformation, jdbcTemplate, template, persistentEntity,
+
+        return getTargetRepositoryViaReflection(repositoryInformation, operations.getJdbcOperations(), template, persistentEntity,
                 converter);
     }
 
@@ -59,7 +60,7 @@ public class JdbcExtRepositoryFactory extends JdbcRepositoryFactory {
     protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key,
                                                                    QueryMethodEvaluationContextProvider evaluationContextProvider) {
         Optional<QueryLookupStrategy> original = super.getQueryLookupStrategy(key, evaluationContextProvider);
-        return Optional.of(new JdbcExtQueryLookupStrategy(jdbcTemplate, context, converter, original.orElseThrow()));
+        return Optional.of(new JdbcExtQueryLookupStrategy(operations.getJdbcOperations(), context, converter, original.orElseThrow()));
     }
 
     @Override

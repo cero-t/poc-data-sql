@@ -11,18 +11,19 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.lang.reflect.Method;
 
 public class JdbcExtQueryLookupStrategy implements QueryLookupStrategy {
-    JdbcTemplate jdbcTemplate;
+    JdbcOperations jdbcOperations;
     RelationalMappingContext context;
     JdbcConverter converter;
     QueryLookupStrategy originalQueryLookupStrategy;
 
-    public JdbcExtQueryLookupStrategy(JdbcTemplate jdbcTemplate, RelationalMappingContext context, JdbcConverter converter, QueryLookupStrategy originalQueryLookupStrategy) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcExtQueryLookupStrategy(JdbcOperations jdbcOperations, RelationalMappingContext context, JdbcConverter converter, QueryLookupStrategy originalQueryLookupStrategy) {
+        this.jdbcOperations = jdbcOperations;
         this.context = context;
         this.converter = converter;
         this.originalQueryLookupStrategy = originalQueryLookupStrategy;
@@ -35,7 +36,7 @@ public class JdbcExtQueryLookupStrategy implements QueryLookupStrategy {
 
         SqlFile annotation = method.getAnnotation(SqlFile.class);
         if (annotation != null) {
-            return new SqlFileQuery(annotation, jdbcTemplate, rowMapper, queryMethod);
+            return new SqlFileQuery(annotation, jdbcOperations, rowMapper, queryMethod);
         }
 
         return originalQueryLookupStrategy.resolveQuery(method, metadata, factory, namedQueries);
