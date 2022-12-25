@@ -4,13 +4,12 @@ import ninja.cero.data.jdbc_ext.repository.JdbcExtRepository;
 import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.data.jdbc.core.convert.EntityRowMapper;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
-import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
 import org.springframework.jdbc.core.JdbcOperations;
 
 import java.util.List;
 
-public class JdbcExtDefaultRepository<T, ID> extends SimpleJdbcRepository<T, ID> implements JdbcExtRepository<T, ID> {
+public class JdbcExtDefaultRepository<T, ID> extends ListSimpleJdbcRepository<T, ID> implements JdbcExtRepository<T, ID> {
     JdbcOperations jdbcOperations;
 
     EntityRowMapper<T> entityRowMapper;
