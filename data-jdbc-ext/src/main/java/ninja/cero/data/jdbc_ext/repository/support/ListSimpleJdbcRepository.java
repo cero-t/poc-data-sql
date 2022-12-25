@@ -8,14 +8,20 @@ import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.ListPagingAndSortingRepository;
+import org.springframework.data.repository.query.ListQueryByExampleExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListSimpleJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID>
-        implements ListCrudRepository<T, ID>, ListPagingAndSortingRepository<T, ID> {
+        implements ListCrudRepository<T, ID>, ListPagingAndSortingRepository<T, ID>, ListQueryByExampleExecutor<T> {
     public ListSimpleJdbcRepository(JdbcAggregateOperations entityOperations, PersistentEntity<T, ?> entity, JdbcConverter converter) {
         super(entityOperations, entity, converter);
+    }
+
+    @Override
+    public <S extends T> List<S> saveAll(Iterable<S> entities) {
+        return toList(super.saveAll(entities));
     }
 
     @Override
@@ -29,8 +35,8 @@ public class ListSimpleJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID>
     }
 
     @Override
-    public <S extends T> List<S> saveAll(Iterable<S> entities) {
-        return toList(super.saveAll(entities));
+    public List<T> findAll(Sort sort) {
+        return toList(super.findAll(sort));
     }
 
     @Override
@@ -41,11 +47,6 @@ public class ListSimpleJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID>
     @Override
     public <S extends T> List<S> findAll(Example<S> example, Sort sort) {
         return toList(super.findAll(example, sort));
-    }
-
-    @Override
-    public List<T> findAll(Sort sort) {
-        return toList(super.findAll(sort));
     }
 
     private <X> List<X> toList(Iterable<X> iterable) {

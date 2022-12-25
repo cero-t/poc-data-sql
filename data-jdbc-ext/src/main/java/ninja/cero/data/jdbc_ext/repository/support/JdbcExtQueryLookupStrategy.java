@@ -40,5 +40,4 @@ public class JdbcExtQueryLookupStrategy implements QueryLookupStrategy {
 
         return originalQueryLookupStrategy.resolveQuery(method, metadata, factory, namedQueries);
     }
-
 }
