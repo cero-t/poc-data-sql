@@ -19,9 +19,8 @@ public class EmpController {
     }
 
     @PostMapping("/")
-    void save(@RequestBody Emp emp) {
-        System.out.println(emp);
-        empRepository.save(emp);
+    void insert(@RequestBody Emp emp) {
+        empRepository.insert(emp);
     }
 
     @GetMapping("/{id}")

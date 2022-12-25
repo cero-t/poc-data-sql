@@ -8,12 +8,12 @@ VALUES
 ,(6, 'LIVE AT TOKYO DOME', 'Blu-ray', 'BABYMETAL', 70.34, '2017-04-12', 'https://images-na.ssl-images-amazon.com/images/I/91UPywmZFgL._SX522_.jpg')
 ;
 
-INSERT INTO emp (name)
+INSERT INTO emp (id, name)
 VALUES
- ('Nakamoto')
-,('Kikuchi')
-,('Mizuno')
-,('Sayashi')
-,('Fujihira')
-,('Okazaki')
+ (1, 'Nakamoto')
+,(2, 'Kikuchi')
+,(3, 'Mizuno')
+,(4, 'Sayashi')
+,(5, 'Fujihira')
+,(6, 'Okazaki')
 ;
