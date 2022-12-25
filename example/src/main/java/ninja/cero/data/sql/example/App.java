@@ -1,7 +1,5 @@
 package ninja.cero.data.sql.example;
 
-import ninja.cero.data.jdbc_ext.repository.JdbcExtRepository;
-import ninja.cero.data.jdbc_ext.repository.support.JdbcExtDefaultRepository;
 import ninja.cero.data.jdbc_ext.repository.support.JdbcExtRepositoryFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

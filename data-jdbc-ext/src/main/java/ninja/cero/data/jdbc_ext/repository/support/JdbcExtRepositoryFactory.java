@@ -1,11 +1,9 @@
 package ninja.cero.data.jdbc_ext.repository.support;
 
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.convert.DataAccessStrategy;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
-import org.springframework.data.jdbc.repository.QueryMappingConfiguration;
 import org.springframework.data.jdbc.repository.support.JdbcRepositoryFactory;
 import org.springframework.data.mapping.callback.EntityCallbacks;
 import org.springframework.data.relational.core.dialect.Dialect;
@@ -15,9 +13,7 @@ import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.lang.Nullable;
 
 import java.util.Optional;
 
@@ -66,16 +62,6 @@ public class JdbcExtRepositoryFactory extends JdbcRepositoryFactory {
     @Override
     protected Class<?> getRepositoryBaseClass(RepositoryMetadata repositoryMetadata) {
         return JdbcExtDefaultRepository.class;
-    }
-
-    @Override
-    public void setBeanFactory(@Nullable BeanFactory beanFactory) {
-        super.setBeanFactory(beanFactory);
-    }
-
-    @Override
-    public void setQueryMappingConfiguration(QueryMappingConfiguration queryMappingConfiguration) {
-        super.setQueryMappingConfiguration(queryMappingConfiguration);
     }
 
     @Override
