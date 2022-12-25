@@ -2,6 +2,7 @@ package ninja.cero.data.jdbc_ext.repository.query;
 
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.data.util.Lazy;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -21,6 +22,8 @@ public class SqlFileQuery implements RepositoryQuery {
 
     private QueryMethod queryMethod;
 
+    Lazy<String> query = Lazy.of(this::getQuery);
+
     public SqlFileQuery(SqlFile annotation, JdbcOperations jdbcOperations, RowMapper<?> recordMapper, QueryMethod queryMethod) {
         this.annotation = annotation;
         this.jdbcOperations = jdbcOperations;
@@ -30,7 +33,7 @@ public class SqlFileQuery implements RepositoryQuery {
 
     @Override
     public Object execute(Object[] parameters) {
-        return jdbcOperations.query(getQuery(), recordMapper);
+        return jdbcOperations.query(query.get(), recordMapper);
     }
 
     @Override
