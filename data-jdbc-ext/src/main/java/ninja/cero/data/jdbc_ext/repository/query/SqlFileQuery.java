@@ -18,22 +18,22 @@ public class SqlFileQuery implements RepositoryQuery {
 
     private JdbcOperations jdbcOperations;
 
-    private RowMapper<?> recordMapper;
+    private RowMapper<?> rowMapper;
 
     private QueryMethod queryMethod;
 
     Lazy<String> query = Lazy.of(this::getQuery);
 
-    public SqlFileQuery(SqlFile annotation, JdbcOperations jdbcOperations, RowMapper<?> recordMapper, QueryMethod queryMethod) {
+    public SqlFileQuery(SqlFile annotation, JdbcOperations jdbcOperations, RowMapper<?> rowMapper, QueryMethod queryMethod) {
         this.annotation = annotation;
         this.jdbcOperations = jdbcOperations;
-        this.recordMapper = recordMapper;
+        this.rowMapper = rowMapper;
         this.queryMethod = queryMethod;
     }
 
     @Override
     public Object execute(Object[] parameters) {
-        return jdbcOperations.query(query.get(), recordMapper);
+        return jdbcOperations.query(query.get(), rowMapper);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SqlFileQuery implements RepositoryQuery {
         URL resource = getClass().getResource(fileName);
 
         if (resource == null) {
-            throw new RuntimeException("SQL file cannot be read: " + fileName);
+            throw new RuntimeException("SQL file not found: " + fileName);
         }
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.openStream()))) {
