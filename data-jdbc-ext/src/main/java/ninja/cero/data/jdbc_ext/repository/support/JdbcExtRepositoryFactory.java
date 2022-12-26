@@ -12,6 +12,7 @@ import org.springframework.data.relational.core.mapping.RelationalPersistentEnti
 import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryLookupStrategy;
+import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 
@@ -53,10 +54,14 @@ public class JdbcExtRepositoryFactory extends JdbcRepositoryFactory {
     }
 
     @Override
-    protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key,
-                                                                   QueryMethodEvaluationContextProvider evaluationContextProvider) {
+    protected Optional<QueryLookupStrategy> getQueryLookupStrategy(Key key, QueryMethodEvaluationContextProvider evaluationContextProvider) {
         Optional<QueryLookupStrategy> original = super.getQueryLookupStrategy(key, evaluationContextProvider);
-        return Optional.of(new JdbcExtQueryLookupStrategy(operations.getJdbcOperations(), context, converter, original.orElseThrow()));
+        if (key == Key.CREATE) {
+            return original;
+        }
+
+        return Optional.of(new JdbcExtQueryLookupStrategy(operations, context, converter, evaluationContextProvider,
+                original.orElseThrow()));
     }
 
     @Override
