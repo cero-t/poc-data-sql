@@ -17,11 +17,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import java.lang.reflect.Method;
 
 public class JdbcExtQueryLookupStrategy implements QueryLookupStrategy {
-    NamedParameterJdbcOperations operations;
-    RelationalMappingContext context;
-    JdbcConverter converter;
-    QueryLookupStrategy originalQueryLookupStrategy;
-    QueryMethodEvaluationContextProvider evaluationContextProvider;
+    protected NamedParameterJdbcOperations operations;
+    protected RelationalMappingContext context;
+    protected JdbcConverter converter;
+    protected QueryLookupStrategy originalQueryLookupStrategy;
+    protected QueryMethodEvaluationContextProvider evaluationContextProvider;
 
     public JdbcExtQueryLookupStrategy(NamedParameterJdbcOperations operations, RelationalMappingContext context,
                                       JdbcConverter converter, QueryMethodEvaluationContextProvider evaluationContextProvider,
@@ -38,8 +38,7 @@ public class JdbcExtQueryLookupStrategy implements QueryLookupStrategy {
         SqlFileQueryMethod queryMethod = new SqlFileQueryMethod(method, metadata, factory, namedQueries, this.context);
         EntityRowMapper<?> rowMapper = new EntityRowMapper<>(context.getRequiredPersistentEntity(metadata.getDomainType()), converter);
 
-        SqlFile annotation = method.getAnnotation(SqlFile.class);
-        if (annotation != null) {
+        if (namedQueries.hasQuery(queryMethod.getNamedQueryName()) || queryMethod.hasAnnotatedQuery()) {
             return new StringBasedJdbcQuery(queryMethod, operations, rowMapper, converter, evaluationContextProvider);
         }
 

@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public class SqlFileQueryMethod extends JdbcQueryMethod {
-    private final Method method;
+    protected final Method method;
 
     public SqlFileQueryMethod(Method method, RepositoryMetadata metadata, ProjectionFactory factory, NamedQueries namedQueries, MappingContext<? extends RelationalPersistentEntity<?>, ? extends RelationalPersistentProperty> mappingContext) {
         super(method, metadata, factory, namedQueries, mappingContext);

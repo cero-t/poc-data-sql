@@ -10,9 +10,9 @@ import org.springframework.jdbc.core.JdbcOperations;
 import java.util.List;
 
 public class JdbcExtDefaultRepository<T, ID> extends ListSimpleJdbcRepository<T, ID> implements JdbcExtRepository<T, ID> {
-    JdbcOperations jdbcOperations;
-    JdbcAggregateOperations entityOperations;
-    EntityRowMapper<T> entityRowMapper;
+    protected JdbcOperations jdbcOperations;
+    protected JdbcAggregateOperations entityOperations;
+    protected EntityRowMapper<T> entityRowMapper;
 
     public JdbcExtDefaultRepository(JdbcOperations jdbcOperations, JdbcAggregateOperations entityOperations, RelationalPersistentEntity<T> entity, JdbcConverter converter) {
         super(entityOperations, entity, converter);
