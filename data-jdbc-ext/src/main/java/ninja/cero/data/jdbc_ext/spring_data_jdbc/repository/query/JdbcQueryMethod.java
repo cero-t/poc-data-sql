@@ -118,7 +118,7 @@ public class JdbcQueryMethod extends QueryMethod {
 	 * @return May be {@code null}.
 	 */
 	@Nullable
-	String getDeclaredQuery() {
+	protected String getDeclaredQuery() {
 
 		String annotatedValue = getQueryValue();
 		return StringUtils.hasText(annotatedValue) ? annotatedValue : getNamedQuery();
@@ -140,7 +140,7 @@ public class JdbcQueryMethod extends QueryMethod {
 	 * @return May be {@code null}.
 	 */
 	@Nullable
-	private String getNamedQuery() {
+	protected String getNamedQuery() {
 
 		String name = getNamedQueryName();
 		return this.namedQueries.hasQuery(name) ? this.namedQueries.getQuery(name) : null;
@@ -169,7 +169,7 @@ public class JdbcQueryMethod extends QueryMethod {
 	 * @return May be {@code null}.
 	 */
 	@Nullable
-	Class<? extends RowMapper> getRowMapperClass() {
+	protected Class<? extends RowMapper> getRowMapperClass() {
 		return getMergedAnnotationAttribute("rowMapperClass");
 	}
 
@@ -179,7 +179,7 @@ public class JdbcQueryMethod extends QueryMethod {
 	 * @return May be {@code null}.
 	 */
 	@Nullable
-	String getRowMapperRef() {
+	protected String getRowMapperRef() {
 		return getMergedAnnotationAttribute("rowMapperRef");
 	}
 
@@ -189,7 +189,7 @@ public class JdbcQueryMethod extends QueryMethod {
 	 * @return May be {@code null}.
 	 */
 	@Nullable
-	Class<? extends ResultSetExtractor> getResultSetExtractorClass() {
+	protected Class<? extends ResultSetExtractor> getResultSetExtractorClass() {
 		return getMergedAnnotationAttribute("resultSetExtractorClass");
 	}
 
@@ -199,7 +199,7 @@ public class JdbcQueryMethod extends QueryMethod {
 	 * @return May be {@code null}.
 	 */
 	@Nullable
-	String getResultSetExtractorRef() {
+	protected String getResultSetExtractorRef() {
 		return getMergedAnnotationAttribute("resultSetExtractorRef");
 	}
 
@@ -215,7 +215,7 @@ public class JdbcQueryMethod extends QueryMethod {
 
 	@SuppressWarnings("unchecked")
 	@Nullable
-	private <T> T getMergedAnnotationAttribute(String attribute) {
+	protected <T> T getMergedAnnotationAttribute(String attribute) {
 
 		Query queryAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, Query.class);
 		return (T) AnnotationUtils.getValue(queryAnnotation, attribute);
@@ -228,7 +228,7 @@ public class JdbcQueryMethod extends QueryMethod {
 		return findAnnotatedQuery().isPresent();
 	}
 
-	private Optional<String> findAnnotatedQuery() {
+	protected Optional<String> findAnnotatedQuery() {
 
 		return lookupQueryAnnotation() //
 				.map(Query::value) //
@@ -251,12 +251,12 @@ public class JdbcQueryMethod extends QueryMethod {
 	 * 
 	 * @return the {@link Optional} wrapped {@link Lock} annotation.
 	 */
-	Optional<Lock> lookupLockAnnotation() {
+	private Optional<Lock> lookupLockAnnotation() {
 		return doFindAnnotation(Lock.class);
 	}
 
 	@SuppressWarnings("unchecked")
-	private <A extends Annotation> Optional<A> doFindAnnotation(Class<A> annotationType) {
+	protected <A extends Annotation> Optional<A> doFindAnnotation(Class<A> annotationType) {
 
 		return (Optional<A>) this.annotationCache.computeIfAbsent(annotationType,
 				it -> Optional.ofNullable(AnnotatedElementUtils.findMergedAnnotation(method, it)));
